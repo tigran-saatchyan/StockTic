@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -67,11 +68,13 @@ LOCAL_APPS = [
     'finance_reports.apps.FinanceReportsConfig',
     'telegram_bot.apps.TelegramBotConfig',
     'users.apps.UsersConfig',
+    'notifications.apps.NotificationsConfig',
 ]
 
 THIRD_PARTY_APPS = [
     'channels',
     'rest_framework',
+    'rest_framework_simplejwt',
     "corsheaders",
     'graphene_django',
     'django_prometheus',
@@ -223,7 +226,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
 }
 
 # Email settings

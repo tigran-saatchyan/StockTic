@@ -1,3 +1,4 @@
+# main.py
 import asyncio
 import logging
 
@@ -6,7 +7,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot_config import BotConfig
 from bot_instance import bot
-from handlers import user_router
+from handlers import registration_router, ticker_router, notification_router
 from services import start_bot
 
 logging.basicConfig(level=logging.INFO)
@@ -16,7 +17,9 @@ def register_routers(dp: Dispatcher) -> None:
     """
     Register routers to dispatcher
     """
-    dp.include_router(user_router)
+    dp.include_router(registration_router)
+    dp.include_router(ticker_router)
+    dp.include_router(notification_router)
 
 
 async def main() -> None:

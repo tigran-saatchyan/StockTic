@@ -7,6 +7,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+api_v1 = 'api/v1/'
+
 django_urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -29,7 +31,12 @@ app_urlpatterns = [
 ]
 
 api_urlpatterns = [
-    path('api/v1/', include('users.urls')),
+    path(api_v1, include('users.urls')),
+    path(api_v1, include('notifications.urls')),
+    path(api_v1, include('tickers.api_urls')),
+]
+
+api_token_urlpatterns = [
     path(
         'api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'
     ),
@@ -47,5 +54,6 @@ urlpatterns = [
     *django_urlpatterns,
     *app_urlpatterns,
     *api_urlpatterns,
+    *api_token_urlpatterns,
     *third_party_urlpatterns
 ]
