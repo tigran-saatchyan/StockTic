@@ -1,0 +1,45 @@
+<!-- templates/dashboard/dashboard.html -->
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<h2>Stocks</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Current Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stock in stocks %}
+        <tr>
+            <td>{{ stock.ticker }}</td>
+            <td>{{ stock.name }}</td>
+            <td>{{ stock.current_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Portfolios</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Total Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for portfolio in portfolios %}
+        <tr>
+            <td>{{ portfolio.name }}</td>
+            <td>{{ portfolio.total_value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

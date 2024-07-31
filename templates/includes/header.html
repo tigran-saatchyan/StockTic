@@ -1,0 +1,72 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'dashboard' %}">StockMon</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarCollapse"
+      aria-controls="navbarCollapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'dashboard' %} active{% endif %}"
+            aria-current="page"
+            href="{% url 'dashboard' %}"
+            >Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'stock_list' %} active{% endif %}"
+            href="{% url 'stock_list' %}"
+            >Stocks</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'watchlist_list' %} active{% endif %}"
+            href="{% url 'watchlist:watchlist_list' %}"
+            >Watchlist</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'portfolio_list' %} active{% endif %}"
+            href="{% url 'portfolio_list' %}"
+            >Portfolio</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'ticker_list' %} active{% endif %}"
+            href="{% url 'tickers:ticker_list' %}"
+            >Tickers</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'index' %} active{% endif %}"
+            href="{% url 'finance_reports:index' %}"
+            >Finance Reports</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'manage_categories' %} active{% endif %}"
+            href="{% url 'finance_reports:manage_categories' %}"
+            >Categories</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>

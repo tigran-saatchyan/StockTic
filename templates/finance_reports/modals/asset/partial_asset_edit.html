@@ -1,0 +1,5 @@
+<form method="post" class="js-asset-edit-form" id="modalAssetEditForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

@@ -1,0 +1,5 @@
+<form method="post" class="js-expense-create-form" id="modalExpenseCreateForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

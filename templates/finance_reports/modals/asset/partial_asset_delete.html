@@ -1,0 +1,5 @@
+<form method="post" class="js-asset-delete-form" id="modalAssetDeleteForm">
+    {% csrf_token %}
+    <p>Are you sure you want to delete "{{ asset }}"?</p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>

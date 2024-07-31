@@ -1,0 +1,5 @@
+<form method="post" class="js-category-edit-form" id="modalCategoryEditForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

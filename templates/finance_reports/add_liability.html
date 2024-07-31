@@ -1,0 +1,12 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Add Liability{% endblock %}
+
+{% block content %}
+<h1>Add Liability</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add</button>
+</form>
+{% endblock %}

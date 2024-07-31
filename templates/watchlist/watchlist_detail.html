@@ -1,0 +1,59 @@
+<!-- templates/watchlist/watchlist_detail.html -->
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    {{ watchlist.name }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ watchlist.name }}</h1>
+    <a href="{% url 'watchlist:add_ticker' watchlist.pk %}" class="btn btn-primary mb-3">Add Ticker</a>
+    <div class="row">
+        {% for data in finance_data %}
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        {{ data.info.shortName }} ({{ data.info.symbol }})
+                    </div>
+                    <div class="card-body">
+                        <p>Current Price: ${{ data.info.currentPrice }}</p>
+                        <canvas id="chart-{{ forloop.counter }}"></canvas>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ block.super }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for data in finance_data %}
+                let ctx = document.getElementById('chart-{{ forloop.counter }}').getContext('2d');
+                let chartData = {{ data.history|safe }};
+                let labels = chartData.map(item => item.Date);
+                let prices = chartData.map(item => item.Close);
+                console.log('Labels:', labels);
+                console.log('Prices:', prices);
+                let chart = new Chart(ctx, {
+                    type: 'line',
+                    data: prices,
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'hour'
+                                }
+                            },
+                            y: {
+                                beginAtZero: false
+                            }
+                        }
+                    }
+                });
+            {% endfor %}
+        });
+    </script>
+{% endblock %}
