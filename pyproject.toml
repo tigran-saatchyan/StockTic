@@ -26,6 +26,8 @@ graphene-django = "^3.2.1"
 sentry-sdk = "^2.3.1"
 django-prometheus = "^2.3.1"
 aiogram = "^3.10.0"
+djangorestframework-simplejwt = "^5.3.1"
+httpx = "^0.27.0"
 
 
 [build-system]

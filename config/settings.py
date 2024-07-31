@@ -66,6 +66,7 @@ LOCAL_APPS = [
     'tickers.apps.TickersConfig',
     'finance_reports.apps.FinanceReportsConfig',
     'telegram_bot.apps.TelegramBotConfig',
+    'users.apps.UsersConfig',
 ]
 
 THIRD_PARTY_APPS = [
@@ -209,6 +210,9 @@ CELERY_TIMEZONE = 'UTC'
 
 # Rest framework settings
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
@@ -216,6 +220,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'COERCE_DECIMAL_TO_STRING': False,
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 # Email settings
@@ -243,3 +251,6 @@ if SENTRY_DSN:
 TELEGRAM_BOT_TOKEN = os.getenv(
     'TELEGRAM_BOT_TOKEN', 'YOUR_TELEGRAM_BOT_API_TOKEN'
 )
+
+AUTH_USER_MODEL = 'users.User'
+API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000')

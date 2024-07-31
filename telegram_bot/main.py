@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 from aiogram import Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot_config import BotConfig
 from bot_instance import bot
@@ -28,7 +29,7 @@ async def main() -> None:
         welcome_message='Welcome to the bot! 🤖',
     )
 
-    dp = Dispatcher()
+    dp = Dispatcher(storage=MemoryStorage())
     dp['config'] = config
 
     register_routers(dp)

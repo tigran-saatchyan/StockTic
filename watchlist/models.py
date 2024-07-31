@@ -1,9 +1,7 @@
 # watchlist/models.py
-from django.contrib.auth.models import User
 from django.db import models
 
 from services.common.mixins import DateFieldsMixin
-from stocks.models import Stock
 from tickers.models import Ticker
 
 
