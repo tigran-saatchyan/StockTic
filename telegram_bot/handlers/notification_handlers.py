@@ -171,3 +171,111 @@ async def process_criteria(
             logger.error(f"HTTP error occurred: {e}")
             await callback_query.message.answer(f"HTTP error occurred: {e}")
     await callback_query.answer()
+
+
+@notification_router.message(Command('unregister_notification'))
+async def cmd_unregister_notification(
+    message: types.Message, state: FSMContext
+) -> None:
+    """
+    Initiates the notification unregistration process
+    """
+    await state.set_state(NotificationStates.waiting_for_unregistration_ticker)
+    await message.answer(
+        'Please provide the ticker symbol you want to unregister from notifications:'
+    )
+
+
+@notification_router.message(
+    NotificationStates.waiting_for_unregistration_ticker
+)
+async def process_ticker_for_unregistration(
+    message: types.Message, state: FSMContext
+) -> None:
+    """
+    Process the ticker symbol provided by the user for unregistration
+    """
+    ticker = message.text.upper()
+
+    async with httpx.AsyncClient() as client:
+        try:
+            # Obtain JWT token
+            token = await get_jwt_token(message.from_user.id)
+
+            headers = {"Authorization": f"Bearer {token}"}
+
+            # Retrieve user ID based on telegram_user_id
+            user_response = await client.get(
+                f"{settings.API_BASE_URL}/users/get_by_telegram_id/",
+                params={"telegram_user_id": message.from_user.id},
+                headers=headers
+            )
+            if user_response.status_code != 200 or not user_response.json():
+                await message.answer('User not found. Please register first.')
+                return
+            user_id = user_response.json()['id']
+
+            # Retrieve ticker ID based on ticker symbol
+            ticker_response = await client.get(
+                f"{settings.API_BASE_URL}/tickers/get_by_symbol/",
+                params={"symbol": ticker}, headers=headers
+            )
+            if ticker_response.status_code != 200 or not ticker_response.json():
+                await message.answer(
+                    'Ticker not found. Please provide a valid ticker symbol.'
+                )
+                return
+            ticker_id = ticker_response.json()['id']
+
+            # Get notifications for the user and ticker
+            notification_response = await client.get(
+                f"{settings.API_BASE_URL}/notifications/",
+                params={
+                    "user": user_id,
+                    "ticker": ticker_id
+                },
+                headers=headers
+            )
+            if notification_response.status_code != 200 or not notification_response.json():
+                await message.answer(
+                    'Notification not found. Please provide a valid ticker symbol.'
+                )
+                return
+
+            # Ensure we get the correct notification by filtering with notification_value
+            notifications = notification_response.json()
+            correct_notification = None
+            for notification in notifications:
+                if notification['ticker'] == ticker_id:
+                    correct_notification = notification
+                    break
+
+            if not correct_notification:
+                await message.answer('No matching notification found.')
+                return
+
+            notification_id = correct_notification['id']
+
+            response = await client.delete(
+                f"{settings.API_BASE_URL}/notifications/{notification_id}/",
+                headers=headers,
+            )
+            logger.debug(
+                f"API response: {response.status_code} - {response.text}"
+            )
+            if response.status_code == 204:
+                await message.answer('Notification unregistration successful!')
+                await state.clear()
+            else:
+                logger.error(
+                    f"Failed to unregister notification: {response.text}"
+                )
+                await message.answer(
+                    'An error occurred. Please try again later.'
+                )
+        except httpx.RequestError as e:
+            logger.error(f"Request error occurred: {e}")
+            await message.answer(f"Request error occurred: {e}")
+        except httpx.HTTPError as e:
+            logger.error(f"HTTP error occurred: {e}")
+            await message.answer(f"HTTP error occurred: {e}")

@@ -17,3 +17,4 @@ class NotificationStates(StatesGroup):
     waiting_for_value = State()
     waiting_for_type = State()
     waiting_for_criteria = State()
+    waiting_for_unregistration_ticker = State()
