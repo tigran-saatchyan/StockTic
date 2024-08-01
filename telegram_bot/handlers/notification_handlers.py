@@ -1,4 +1,3 @@
-# telegram_bot/handlers/notification_handlers.py
 import logging
 
 import httpx
