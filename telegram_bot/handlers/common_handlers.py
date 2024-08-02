@@ -26,7 +26,6 @@ async def cmd_start(message: types.Message, state: FSMContext) -> None:
         "Do you want to register?", reply_markup=keyboard
     )
 
-
     data = await state.get_data()
     messages = data.get('messages', [])
     messages.append(sent_message.message_id)
@@ -101,7 +100,7 @@ async def cmd_clear(message: types.Message, state: FSMContext) -> None:
 
 
 @common_router.message(Command('get_topic_id'))
-async def get_topic_id(message:  types.Message) -> None:
+async def get_topic_id(message: types.Message) -> None:
     topic_id = message.message_thread_id
     chat_id = message.chat.id
     await message.answer(f"Chat ID: {chat_id}, Topic ID: {topic_id}")

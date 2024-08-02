@@ -28,11 +28,12 @@ app_urlpatterns = [
         'finance-reports/',
         include('finance_reports.urls')
     ),
+    path('notifications/', include('notifications.urls')),
 ]
 
 api_urlpatterns = [
     path(api_v1, include('users.urls')),
-    path(api_v1, include('notifications.urls')),
+    path(api_v1, include('notifications.api_urls')),
     path(api_v1, include('tickers.api_urls')),
 ]
 
