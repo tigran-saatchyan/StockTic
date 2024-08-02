@@ -33,8 +33,10 @@ def check_ticker_prices():
 
 def send_notification(notification, current_price):
     user = notification.user
-    message = f'The price of {notification.ticker.symbol} is now {current_price}, which meets your criteria.'
-
+    message = (
+        f"📊 The price of {notification.ticker.symbol} is now {current_price:.2f} "
+        f"({notification.notification_criteria.replace('_', ' ')} {notification.notification_value:.2f})! 📈"
+    )
     if notification.notification_type in ['email', 'all']:
         send_mail(
             'Price Alert',
