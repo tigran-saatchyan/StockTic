@@ -196,6 +196,35 @@ async def process_ticker_for_unregistration(
     Process the ticker symbol provided by the user for unregistration
     """
     ticker = message.text.upper()
+    await state.update_data(ticker=ticker)
+    await state.set_state(NotificationStates.waiting_for_unregistration_value)
+    await message.answer(
+        'Please provide the notification value for the ticker you want to unregister:'
+    )
+
+
+@notification_router.message(
+    NotificationStates.waiting_for_unregistration_value
+    )
+async def process_value_for_unregistration(
+    message: types.Message, state: FSMContext
+) -> None:
+    """
+    Process the notification value provided by the user for unregistration
+    """
+    try:
+        value = float(message.text)
+        logger.debug(f"Received unregistration value: {value}")
+        await state.update_data(notification_value=value)
+        await unregister_notification(message, state)
+    except ValueError:
+        await message.answer('Invalid value. Please provide a valid number.')
+
+
+async def unregister_notification(
+    message: types.Message, state: FSMContext
+    ) -> None:
+    data = await state.get_data()
 
     async with httpx.AsyncClient() as client:
         try:
@@ -218,7 +247,7 @@ async def process_ticker_for_unregistration(
             # Retrieve ticker ID based on ticker symbol
             ticker_response = await client.get(
                 f"{settings.API_BASE_URL}/tickers/get_by_symbol/",
-                params={"symbol": ticker}, headers=headers
+                params={"symbol": data['ticker']}, headers=headers
             )
             if ticker_response.status_code != 200 or not ticker_response.json():
                 await message.answer(
@@ -238,7 +267,7 @@ async def process_ticker_for_unregistration(
             )
             if notification_response.status_code != 200 or not notification_response.json():
                 await message.answer(
-                    'Notification not found. Please provide a valid ticker symbol.'
+                    'Notification not found. Please provide a valid ticker symbol and value.'
                 )
                 return
 
@@ -246,7 +275,8 @@ async def process_ticker_for_unregistration(
             notifications = notification_response.json()
             correct_notification = None
             for notification in notifications:
-                if notification['ticker'] == ticker_id:
+                if notification['ticker'] == ticker_id and notification[
+                    'notification_value'] == data['notification_value']:
                     correct_notification = notification
                     break
 
@@ -279,3 +309,22 @@ async def process_ticker_for_unregistration(
         except httpx.HTTPError as e:
             logger.error(f"HTTP error occurred: {e}")
             await message.answer(f"HTTP error occurred: {e}")
+
+
+# Add state for waiting for unregistration value
+@notification_router.message(
+    NotificationStates.waiting_for_unregistration_value
+    )
+async def process_value_for_unregistration(
+    message: types.Message, state: FSMContext
+) -> None:
+    """
+    Process the notification value provided by the user for unregistration
+    """
+    try:
+        value = float(message.text)
+        logger.debug(f"Received unregistration value: {value}")
+        await state.update_data(notification_value=value)
+        await unregister_notification(message, state)
+    except ValueError:
+        await message.answer('Invalid value. Please provide a valid number.')
