@@ -205,7 +205,7 @@ async def process_ticker_for_unregistration(
 
 @notification_router.message(
     NotificationStates.waiting_for_unregistration_value
-    )
+)
 async def process_value_for_unregistration(
     message: types.Message, state: FSMContext
 ) -> None:
@@ -223,7 +223,7 @@ async def process_value_for_unregistration(
 
 async def unregister_notification(
     message: types.Message, state: FSMContext
-    ) -> None:
+) -> None:
     data = await state.get_data()
 
     async with httpx.AsyncClient() as client:
@@ -271,7 +271,6 @@ async def unregister_notification(
                 )
                 return
 
-            # Ensure we get the correct notification by filtering with notification_value
             notifications = notification_response.json()
             correct_notification = None
             for notification in notifications:
@@ -311,10 +310,9 @@ async def unregister_notification(
             await message.answer(f"HTTP error occurred: {e}")
 
 
-# Add state for waiting for unregistration value
 @notification_router.message(
     NotificationStates.waiting_for_unregistration_value
-    )
+)
 async def process_value_for_unregistration(
     message: types.Message, state: FSMContext
 ) -> None:
@@ -328,3 +326,75 @@ async def process_value_for_unregistration(
         await unregister_notification(message, state)
     except ValueError:
         await message.answer('Invalid value. Please provide a valid number.')
+
+
+@notification_router.message(Command('get_notifications'))
+async def cmd_get_notifications(
+    message: types.Message, state: FSMContext
+) -> None:
+    """
+    Retrieves and returns all notifications for the user
+    """
+    async with httpx.AsyncClient() as client:
+        try:
+            # Obtain JWT token
+            token = await get_jwt_token(message.from_user.id)
+
+            headers = {"Authorization": f"Bearer {token}"}
+
+            # Retrieve user ID based on telegram_user_id
+            user_response = await client.get(
+                f"{settings.API_BASE_URL}/users/get_by_telegram_id/",
+                params={"telegram_user_id": message.from_user.id},
+                headers=headers
+            )
+            if user_response.status_code != 200 or not user_response.json():
+                await message.answer('User not found. Please register first.')
+                return
+            user_id = user_response.json()['id']
+
+            # Get notifications for the user
+            notification_response = await client.get(
+                f"{settings.API_BASE_URL}/notifications/",
+                params={"user": user_id},
+                headers=headers
+            )
+            if notification_response.status_code != 200 or not notification_response.json():
+                await message.answer('No notifications found.')
+                return
+
+            notifications = notification_response.json()
+            notifications_list = []
+
+            for notification in notifications:
+                # Fetch ticker details
+                ticker_response = await client.get(
+                    f"{settings.API_BASE_URL}/tickers/{notification['ticker']}/",
+                    headers=headers
+                )
+                if ticker_response.status_code == 200:
+                    ticker = ticker_response.json()
+                    ticker_symbol = f"📈 {ticker['symbol']}"
+                    criteria = notification['notification_criteria'].replace(
+                        '_', ' '
+                    )
+                    value = f"💵 {notification['notification_value']}"
+                    notification_type = f"📬 {notification['notification_type'].capitalize()}"
+                    formatted_notification = f"{ticker_symbol:<7} - {criteria:<9} - {value:<12} - {notification_type:<8}"
+                    notifications_list.append(formatted_notification)
+
+            if not notifications_list:
+                await message.answer('No notifications found.')
+                return
+
+            notifications_message = "\n".join(notifications_list)
+            await message.answer(
+                f"Your notifications:\n```\n{notifications_message}\n```",
+                parse_mode='Markdown'
+            )
+        except httpx.RequestError as e:
+            logger.error(f"Request error occurred: {e}")
+            await message.answer(f"Request error occurred: {e}")
+        except httpx.HTTPError as e:
+            logger.error(f"HTTP error occurred: {e}")
+            await message.answer(f"HTTP error occurred: {e}")
