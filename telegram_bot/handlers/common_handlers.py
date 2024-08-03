@@ -101,6 +101,15 @@ async def cmd_clear(message: types.Message, state: FSMContext) -> None:
 
 @common_router.message(Command('get_topic_id'))
 async def get_topic_id(message: types.Message) -> None:
+    """
+    Handler for the /get_topic_id command.
+
+    This handler retrieves the chat ID and the topic ID (message thread ID) from the incoming message
+    and sends them back to the user. It also logs this information.
+
+    Args:
+        message (types.Message): The incoming message object containing the chat and thread information.
+    """
     topic_id = message.message_thread_id
     chat_id = message.chat.id
     await message.answer(f"Chat ID: {chat_id}, Topic ID: {topic_id}")

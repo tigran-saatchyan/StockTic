@@ -21,7 +21,7 @@ async def cmd_ticker_info(message: types.Message, state: FSMContext) -> None:
 @ticker_router.message(TickerStates.waiting_for_ticker_info)
 async def process_ticker_info(
     message: types.Message, state: FSMContext
-    ) -> None:
+) -> None:
     """
     This handler will process the ticker symbol provided by the user
     """
@@ -51,7 +51,7 @@ async def process_ticker_info(
 @ticker_router.message(Command('latest_price'))
 async def cmd_latest_price(message: types.Message, state: FSMContext) -> None:
     """
-    This handler will be called when user sends `/latest_price` command
+    Request the latest price for a ticker symbol
     """
     await state.set_state(TickerStates.waiting_for_latest_price)
     await message.answer('Please provide a ticker symbol:')
@@ -60,7 +60,7 @@ async def cmd_latest_price(message: types.Message, state: FSMContext) -> None:
 @ticker_router.message(TickerStates.waiting_for_latest_price)
 async def process_latest_price(
     message: types.Message, state: FSMContext
-    ) -> None:
+) -> None:
     """
     This handler will process the ticker symbol provided by the user
     """
