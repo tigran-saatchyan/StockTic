@@ -1,0 +1,14 @@
+<!-- templates/watchlist/confirm_delete.html -->
+{% extends 'layout/base.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+  <h1>Confirm Delete</h1>
+  <p>Are you sure you want to delete ticker {{ watchlist_ticker.ticker.symbol }} from watchlist {{ watchlist_ticker.watchlist.name }}?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm</button>
+    <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

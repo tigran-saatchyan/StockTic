@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Watchlist
+from .models import Watchlist, WatchlistTicker
 
 
 class WatchlistForm(forms.ModelForm):
@@ -9,13 +9,14 @@ class WatchlistForm(forms.ModelForm):
         fields = ['name']
 
 
-class AddTickerForm(forms.Form):
-    ticker_symbol = forms.CharField(
-        max_length=10,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'id': 'id_ticker_symbol',
-            }
-        )
-    )
+class AddTickerForm(forms.ModelForm):
+
+    class Meta:
+        model = WatchlistTicker
+        fields = ['ticker']
+
+        widgets = {
+            'ticker': forms.Select(
+                attrs={'class': 'normalize', 'placeholder': 'Ticker Symbol'}
+            )
+        }
