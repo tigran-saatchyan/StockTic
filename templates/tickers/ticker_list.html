@@ -1,6 +1,7 @@
 <!-- templates/tickers/ticker_list.html -->
 {% extends 'layout/base.html' %}
 {% load url_filters %}
+{% load market_filters %}
 
 {% block title %}
   {{ title }}
@@ -34,6 +35,11 @@
         <th>IPO Year</th>
         <th>Sector</th>
         <th>Industry</th>
+{#        <th>Last Sale</th>#}
+{#        <th>Net Change</th>#}
+{#        <th>Percent Change</th>#}
+        <th>Market Cap</th>
+{#        <th>Volume</th>#}
       </tr>
       </thead>
       <tbody>
@@ -46,6 +52,11 @@
           <td>{{ ticker.ipo_year }}</td>
           <td>{{ ticker.sector }}</td>
           <td>{{ ticker.industry }}</td>
+{#          <td>{{ ticker.last_sale }}</td>#}
+{#          <td>{{ ticker.net_change }}</td>#}
+{#          <td>{{ ticker.percent_change }}</td>#}
+          <td>{{ ticker.market_cap|format_market_cap }}</td>
+{#          <td>{{ ticker.volume|format_market_cap }}</td>#}
         </tr>
       {% endfor %}
       </tbody>
@@ -58,6 +69,11 @@
         <td>IPO Year</td>
         <td>Sector</td>
         <td>Industry</td>
+{#        <td>Last Sale</td>#}
+{#        <td>Net Change</td>#}
+{#        <td>Percent Change</td>#}
+        <td>Market Cap</td>
+{#        <td>Volume</td>#}
       </tr>
       </tfoot>
     </table>

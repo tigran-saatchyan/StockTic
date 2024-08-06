@@ -4,6 +4,7 @@ from aiogram.fsm.state import StatesGroup, State
 class TickerStates(StatesGroup):
     waiting_for_ticker_info = State()
     waiting_for_latest_price = State()
+    waiting_for_ticker_news = State()
 
 
 class RegistrationStates(StatesGroup):
