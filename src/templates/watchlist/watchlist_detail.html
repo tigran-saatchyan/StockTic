@@ -1,0 +1,215 @@
+<!-- templates/watchlist/watchlist_detail.html -->
+{% extends 'layout/../layout/base.html' %}
+
+{% block title %}
+  {{ watchlist.name }}
+{% endblock %}
+
+{% block stylesheets %}
+  <style>
+      .table thead th, .table tbody td {
+          vertical-align: middle;
+          text-align: center;
+          padding: 0;
+      }
+
+      .range-container {
+          display: flex;
+          align-items: center;
+      }
+
+      .range-bar {
+          position: relative;
+          width: 100%;
+          height: 4px; /* Increased height for the bar */
+          background-color: #ddd;
+          margin: 0 5px;
+      }
+
+      .range-indicator {
+          position: absolute;
+          top: -8px; /* Adjusted for the new height */
+          width: 4px; /* Increased width for better visibility */
+          height: 20px; /* Increased height for better visibility */
+          background-color: red;
+          border-radius: 6px; /* Adjusted for the new size */
+      }
+
+      .range-min,
+      .range-max {
+          font-size: 0.8em; /* Smaller font size for numeric labels */
+      }
+
+      .table th.day-range-column,
+      .table td.day-range-column,
+      .table th.year-range-column,
+      .table td.year-range-column {
+          width: 250px; /* Adjust the width as needed */
+      }
+
+      .table th.day-chart-column,
+      .table td.day-chart-column {
+          width: 200px;
+          padding-left: 10px;
+          padding-right: 10px;
+      }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1>{{ watchlist.name }}</h1>
+  <a href="{% url 'watchlist:add_ticker' watchlist.pk %}" class="btn btn-primary mb-3">Add Ticker</a>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Last Price</th>
+        <th>Change</th>
+        <th>Chg %</th>
+        <th>Currency</th>
+        <th>Market Time</th>
+        <th class="day-range-column">Day Range</th>
+        <th class="year-range-column">52-Wk Range</th>
+        <th class="day-chart-column">Day Chart</th>
+        <th>Market Cap</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for data in finance_data %}
+        <tr>
+          <td>{{ data.info.symbol }}</td>
+          <td>${{ data.info.currentPrice }}</td>
+          <td>
+            {% if data.change is not None %}
+              {{ data.change|floatformat:2 }}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td>
+            {% if data.changePercent is not None %}
+              {{ data.changePercent|floatformat:2 }}%
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td>{{ data.info.currency }}</td>
+          <td>{{ data.info.marketTime }}</td>
+          <td class="day-range-column">
+            {% if data.dayRangePosition is not None %}
+              <div class="range-container">
+                <span class="range-min">${{ data.info.dayLow }}</span>
+                <div class="range-bar">
+                  <div class="range-indicator" style="left: {{ data.dayRangePosition }}%;"></div>
+                </div>
+                <span class="range-max">${{ data.info.dayHigh }}</span>
+              </div>
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td class="year-range-column">
+            {% if data.yearRangePosition is not None %}
+              <div class="range-container">
+                <span class="range-min">${{ data.info.fiftyTwoWeekLow }}</span>
+                <div class="range-bar">
+                  <div class="range-indicator year" style="left: {{ data.yearRangePosition }}%;"></div>
+                </div>
+                <span class="range-max">${{ data.info.fiftyTwoWeekHigh }}</span>
+              </div>
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td class="day-chart-column">
+            <canvas id="chart-{{ forloop.counter }}" width="100" height="50"></canvas>
+          </td>
+          <td>{{ data.formattedMarketCap }}</td>
+          <td>
+            <a href="{% url 'watchlist:delete_ticker' watchlist.pk data.info.symbol %}" class="btn btn-danger btn-sm">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          {% for data in finance_data %}
+              (function () {
+                  const canvasId = 'chart-{{ forloop.counter }}';
+                  const ctx = document.getElementById(canvasId).getContext('2d');
+                  const chartData = {{ data.history|safe }};
+                  const labels = chartData.map(item => item.Datetime);
+                  const prices = chartData.map(item => item.Close);
+
+                  // Determine the colors for the chart
+                  const backgroundColors = prices.map((price, index) => {
+                      if (index === 0) return 'rgba(0, 128, 0, 0.2)'; // First data point is green
+                      return price > prices[index - 1] ? 'rgba(0, 128, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)';
+                  });
+
+                  const borderColors = prices.map((price, index) => {
+                      if (index === 0) return 'rgba(0, 128, 0, 1)'; // First data point is green
+                      return price > prices[index - 1] ? 'rgba(0, 128, 0, 1)' : 'rgba(255, 0, 0, 1)';
+                  });
+
+                  const datasets = [{
+                      label: '{{ data.info.symbol }}',
+                      data: prices,
+                      backgroundColor: backgroundColors,
+                      borderColor: borderColors,
+                      borderWidth: 1,
+                      fill: true,
+                      pointRadius: 0,
+                      lineTension: 0.2
+                  }];
+
+                  new Chart(ctx, {
+                      type: 'line',
+                      data: {
+                          labels: labels,
+                          datasets: datasets
+                      },
+                      options: {
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                              x: {
+                                  display: false,
+                              },
+                              y: {
+                                  display: false,
+                              }
+                          },
+                          plugins: {
+                              legend: {
+                                  display: false
+                              },
+                              tooltip: {
+                                  callbacks: {
+                                      label: function (context) {
+                                          let label = context.dataset.label || '';
+                                          if (label) {
+                                              label += ': ';
+                                          }
+                                          label += '$' + context.parsed.y.toFixed(2);
+                                          return label;
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  });
+              })();
+          {% endfor %}
+      });
+  </script>
+{% endblock %}

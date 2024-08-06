@@ -1,0 +1,18 @@
+<!-- templates/watchlist/watchlist_list.html -->
+{% extends 'layout/../layout/base.html' %}
+
+{% block title %}
+    Watchlists
+{% endblock %}
+
+{% block content %}
+    <h1>My Watchlists</h1>
+    <a href="{% url 'watchlist:create_watchlist' %}" class="btn btn-primary mb-3">Create Watchlist</a>
+    <ul class="list-group">
+        {% for watchlist in watchlists %}
+            <li class="list-group-item">
+                <a href="{% url 'watchlist:watchlist_detail' watchlist.pk %}">{{ watchlist.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

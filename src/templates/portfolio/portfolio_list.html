@@ -1,0 +1,15 @@
+<!-- templates/portfolio/portfolio_list.html -->
+{% extends 'layout/../layout/base.html' %}
+
+{% block content %}
+<h1>Portfolio</h1>
+{% if portfolios %}
+    <ul>
+        {% for portfolio in portfolios %}
+        <li>{{ portfolio.name }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You do not have any portfolios.</p>
+{% endif %}
+{% endblock %}

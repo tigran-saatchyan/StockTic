@@ -1,0 +1,15 @@
+<!-- templates/watchlist/watchlist.html -->
+{% extends 'layout/../layout/base.html' %}
+
+{% block content %}
+<h1>Watchlist</h1>
+{% if watchlist %}
+    <ul>
+        {% for stock in watchlist.stocks.all %}
+        <li>{{ stock.name }} ({{ stock.ticker }}) - {{ stock.current_price }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You do not have any stocks in your watchlist.</p>
+{% endif %}
+{% endblock %}

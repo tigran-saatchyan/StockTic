@@ -1,0 +1,66 @@
+<!-- templates/historical_data/historical_data.html -->
+{% extends 'layout/../layout/base.html' %}
+
+{% block content %}
+<h1>Historical Data{% if stock %} for {{ stock.name }} ({{ stock.ticker }}){% endif %}</h1>
+{% if data %}
+    <canvas id="historicalChart"></canvas>
+    <script>
+    var ctx = document.getElementById('historicalChart').getContext('2d');
+    var historicalChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ data.values_list('date', flat=True)|safe }},
+            datasets: [{
+                label: 'Price',
+                data: {{ data.values_list('close', flat=True)|safe }},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+{% else %}
+    <p>No historical data available for this stock.</p>
+{% endif %}
+{% endblock %}
+<!-- templates/historical_data/historical_data.html -->
+{% extends 'layout/../layout/base.html' %}
+
+{% block content %}
+<h1>Historical Data{% if stock %} for {{ stock.name }} ({{ stock.ticker }}){% endif %}</h1>
+{% if data %}
+    <canvas id="historicalChart"></canvas>
+    <script>
+    var ctx = document.getElementById('historicalChart').getContext('2d');
+    var historicalChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ data.values_list('date', flat=True)|safe }},
+            datasets: [{
+                label: 'Price',
+                data: {{ data.values_list('close', flat=True)|safe }},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+{% else %}
+    <p>No historical data available for this stock.</p>
+{% endif %}
+{% endblock %}
