@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 
-from services.common.utils import format_market_cap
+from services.utils import format_market_cap
 from tickers.models import Ticker
 from tickers.services import Finance
 from .forms import WatchlistForm, AddTickerForm

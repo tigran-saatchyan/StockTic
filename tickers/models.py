@@ -28,6 +28,26 @@ class Ticker(DateFieldsMixin, models.Model):
         max_length=255, **NULLABLE, verbose_name="Industry",
         help_text="Industry"
     )
+    last_sale = models.CharField(
+        max_length=50, **NULLABLE, verbose_name="Last Sale",
+        help_text="Last sale price"
+    )
+    net_change = models.CharField(
+        max_length=50, **NULLABLE, verbose_name="Net Change",
+        help_text="Net change"
+    )
+    percent_change = models.CharField(
+        max_length=50, **NULLABLE, verbose_name="Percent Change",
+        help_text="Percent change"
+    )
+    market_cap = models.CharField(
+        max_length=50, **NULLABLE, verbose_name="Market Cap",
+        help_text="Market capitalization"
+    )
+    volume = models.CharField(
+        max_length=50, **NULLABLE, verbose_name="Volume",
+        help_text="Volume"
+    )
 
     @classmethod
     def create_from_csv(cls, csv_file):
@@ -35,7 +55,19 @@ class Ticker(DateFieldsMixin, models.Model):
         reader = csv.reader(file)
         next(reader)
         for row in reader:
-            symbol, name, country, ipo_year, sector, industry = row
+            (
+                symbol,
+                name,
+                last_sale,
+                net_change,
+                percent_change,
+                market_cap,
+                country,
+                ipo_year,
+                volume,
+                sector,
+                industry,
+            ) = row
 
             try:
                 ipo_year = int(ipo_year)
@@ -44,8 +76,13 @@ class Ticker(DateFieldsMixin, models.Model):
             ticker = cls(
                 symbol=symbol,
                 name=name,
+                last_sale=last_sale,
+                net_change=net_change,
+                percent_change=percent_change,
+                market_cap=market_cap,
                 country=country,
                 ipo_year=ipo_year,
+                volume=volume,
                 sector=sector,
                 industry=industry,
             )

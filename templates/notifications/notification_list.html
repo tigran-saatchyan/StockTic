@@ -38,10 +38,10 @@
           <td>{{ notification.user }}</td>
           <td>{{ notification.ticker }}</td>
           <td>{{ notification.notification_criteria }}</td>
-          <td>{{ notification.notification_value }}</td>
-          <td>{{ notification.last_notification }}</td>
+          <td>{{ notification.notification_value }} $</td>
+          <td>{{ notification.last_notification|date:'d M Y H:i:s' }}</td>
           <td>{{ notification.notification_type }}</td>
-          <td>{{ notification.date_created }}</td>
+          <td>{{ notification.date_created|date:'d M Y H:i:s' }}</td>
           <td>
             <a href="{% url 'notifications:notification_edit' notification.pk %}"
                 class="btn btn-primary btn-sm">Edit</a>
