@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -31,6 +32,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 ALL_HOSTS = "http://*"
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -285,3 +290,15 @@ TELEGRAM_BOT_TOKEN = os.getenv(
 
 AUTH_USER_MODEL = 'users.User'
 API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000')
+
+TESTING = "test" in sys.argv
+
+if not TESTING:
+    INSTALLED_APPS = [
+        *INSTALLED_APPS,
+        "debug_toolbar",
+    ]
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        *MIDDLEWARE,
+    ]

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
@@ -58,3 +59,8 @@ urlpatterns = [
     *api_token_urlpatterns,
     *third_party_urlpatterns
 ]
+
+if settings.DEBUG or not settings.TESTING:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+
+    urlpatterns += debug_toolbar_urls()

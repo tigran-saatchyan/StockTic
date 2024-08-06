@@ -5,48 +5,14 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Add Ticker to {{ watchlist.name }}</h1>
+    <h1>Add Ticker to {{ watchlist.name}}</h1>
     <form method="post">
         {% csrf_token %}
         <div class="mb-3">
-            {{ form.ticker_symbol.label_tag }}
-            {{ form.ticker_symbol }}
+            {{ form.ticker.label_tag }}
+            {{ form.ticker }}
         </div>
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
 {% endblock %}
 
-{% block javascripts %}
-    {{ block.super }}
-    <script>
-        $(document).ready(function() {
-            $('#id_ticker_symbol').select2({
-                ajax: {
-                    url: '{% url "tickers:search_tickers" %}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            q: params.term,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results.map(function(item) {
-                                return {
-                                    id: item.symbol,
-                                    text: item.symbol,
-                                };
-                            }),
-                        };
-                    },
-                    cache: true,
-                },
-                minimumInputLength: 2,
-                placeholder: 'Search for a ticker',
-                allowClear: true,
-                theme: 'bootstrap-5',
-            });
-        });
-    </script>
-{% endblock %}

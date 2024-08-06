@@ -29,17 +29,29 @@ class Finance:
             logger.error(f"Error fetching info for {self.symbol}: {e}")
             return None
 
-    def get_history(self, period="1mo"):
+    def get_history(
+        self, period="1mo", interval="1d"
+    ):
         """Fetches the historical market data for the specified period.
 
         Args:
-            period (str): The period for which to fetch the data (e.g., "1mo", "1y").
-
+            period (str): The period for which to fetch the data
+            (e.g., "1mo", "1y").
+            interval (str): The interval for the data
+            (e.g., "1d", "1wk").
         Returns:
-            pandas.DataFrame: A DataFrame containing the historical market data.
+            pandas.DataFrame: A DataFrame containing the historical
+            market data.
         """
         try:
-            return self.ticker.history(period=period)
+            return self.ticker.history(
+                period=period, interval=interval,
+                start=None, end=None, prepost=False, actions=True,
+                auto_adjust=True, back_adjust=False, repair=False,
+                keepna=False,
+                proxy=None, rounding=False, timeout=10,
+                raise_errors=False
+            )
         except Exception as e:
             logger.error(f"Error fetching history for {self.symbol}: {e}")
             return None
@@ -51,7 +63,7 @@ class Finance:
             dict: A dictionary containing the metadata of the historical data.
         """
         try:
-            self.get_history()  # Ensure history is fetched before getting metadata
+            self.get_history()
             return self.ticker.history_metadata
         except Exception as e:
             logger.error(
@@ -60,7 +72,8 @@ class Finance:
             return None
 
     def get_actions(self):
-        """Fetches the actions (dividends, splits, capital gains) of the company.
+        """Fetches the actions (dividends, splits, capital gains)
+        of the company.
 
         Returns:
             pandas.DataFrame: A DataFrame containing the actions data.
@@ -96,7 +109,8 @@ class Finance:
             return None
 
     def get_capital_gains(self):
-        """Fetches the capital gains of the company (only for mutual funds & ETFs).
+        """Fetches the capital gains of the company (only for mutual
+        funds & ETFs).
 
         Returns:
             pandas.Series: A Series containing the capital gains data.
@@ -114,10 +128,12 @@ class Finance:
 
         Args:
             start (str): The start date for fetching the share data.
-            end (str, optional): The end date for fetching the share data. Defaults to None.
+            end (str, optional): The end date for fetching the share
+            data. Defaults to None.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the share count data.
+            pandas.DataFrame: A DataFrame containing the share
+            count data.
         """
         try:
             return self.ticker.get_shares_full(start=start, end=end)
@@ -129,7 +145,8 @@ class Finance:
         """Fetches the annual income statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the annual income statement data.
+            pandas.DataFrame: A DataFrame containing the annual income
+            statement data.
         """
         try:
             return self.ticker.income_stmt
@@ -143,7 +160,8 @@ class Finance:
         """Fetches the quarterly income statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the quarterly income statement data.
+            pandas.DataFrame: A DataFrame containing the quarterly
+            income statement data.
         """
         try:
             return self.ticker.quarterly_income_stmt
@@ -157,7 +175,8 @@ class Finance:
         """Fetches the annual balance sheet of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the annual balance sheet data.
+            pandas.DataFrame: A DataFrame containing the annual balance
+            sheet data.
         """
         try:
             return self.ticker.balance_sheet
@@ -171,7 +190,8 @@ class Finance:
         """Fetches the quarterly balance sheet of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the quarterly balance sheet data.
+            pandas.DataFrame: A DataFrame containing the quarterly
+            balance sheet data.
         """
         try:
             return self.ticker.quarterly_balance_sheet
@@ -185,7 +205,8 @@ class Finance:
         """Fetches the annual cash flow statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the annual cash flow data.
+            pandas.DataFrame: A DataFrame containing the annual cash
+            flow data.
         """
         try:
             return self.ticker.cashflow
@@ -197,7 +218,8 @@ class Finance:
         """Fetches the quarterly cash flow statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the quarterly cash flow data.
+            pandas.DataFrame: A DataFrame containing the quarterly
+            cash flow data.
         """
         try:
             return self.ticker.quarterly_cashflow
@@ -211,7 +233,8 @@ class Finance:
         """Fetches the major holders of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the major holders data.
+            pandas.DataFrame: A DataFrame containing the major
+            holders data.
         """
         try:
             return self.ticker.major_holders
@@ -225,7 +248,8 @@ class Finance:
         """Fetches the institutional holders of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the institutional holders data.
+            pandas.DataFrame: A DataFrame containing the institutional
+            holders data.
         """
         try:
             return self.ticker.institutional_holders
@@ -239,7 +263,8 @@ class Finance:
         """Fetches the mutual fund holders of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the mutual fund holders data.
+            pandas.DataFrame: A DataFrame containing the mutual fund
+            holders data.
         """
         try:
             return self.ticker.mutualfund_holders
@@ -253,7 +278,8 @@ class Finance:
         """Fetches the insider transactions of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the insider transactions data.
+            pandas.DataFrame: A DataFrame containing the insider
+            transactions data.
         """
         try:
             return self.ticker.insider_transactions
@@ -267,7 +293,8 @@ class Finance:
         """Fetches the insider purchases of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the insider purchases data.
+            pandas.DataFrame: A DataFrame containing the insider
+            purchases data.
         """
         try:
             return self.ticker.insider_purchases
@@ -281,7 +308,8 @@ class Finance:
         """Fetches the insider roster holders of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the insider roster holders data.
+            pandas.DataFrame: A DataFrame containing the insider roster
+            holders data.
         """
         try:
             return self.ticker.insider_roster_holders
@@ -295,7 +323,8 @@ class Finance:
         """Fetches the analyst recommendations for the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the analyst recommendations.
+            pandas.DataFrame: A DataFrame containing the analyst
+            recommendations.
         """
         try:
             return self.ticker.recommendations
@@ -306,10 +335,12 @@ class Finance:
             return None
 
     def get_recommendations_summary(self):
-        """Fetches the summary of analyst recommendations for the company's stock.
+        """Fetches the summary of analyst recommendations for the
+        company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the recommendations summary.
+            pandas.DataFrame: A DataFrame containing the
+            recommendations summary.
         """
         try:
             return self.ticker.recommendations_summary
@@ -323,7 +354,8 @@ class Finance:
         """Fetches the stock upgrades and downgrades for the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the upgrades and downgrades.
+            pandas.DataFrame: A DataFrame containing the upgrades and
+            downgrades.
         """
         try:
             return self.ticker.upgrades_downgrades
@@ -348,7 +380,8 @@ class Finance:
             return None
 
     def get_isin(self):
-        """Fetches the International Securities Identification Number (ISIN) for the company.
+        """Fetches the International Securities Identification Number
+        (ISIN) for the company.
 
         Returns:
             str: The ISIN code.
