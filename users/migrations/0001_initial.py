@@ -2,7 +2,7 @@
 
 import django.core.validators
 import django.utils.timezone
-import services.utils
+import custom_utils.utils
 from django.db import migrations, models
 
 
@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
                     models.ImageField(
                         blank=True,
                         null=True,
-                        upload_to=services.utils.save_picture,
+                        upload_to=custom_utils.utils.save_picture,
                         verbose_name="avatar",
                     ),
                 ),

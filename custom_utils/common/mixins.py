@@ -3,8 +3,7 @@ from django.db import models
 
 class DateFieldsMixin(models.Model):
     date_created = models.DateTimeField(
-        auto_now_add=True, verbose_name="Date Created",
-        help_text="Date Created"
+        auto_now_add=True, verbose_name="Date Created", help_text="Date Created"
     )
     date_modified = models.DateTimeField(
         auto_now=True, verbose_name="Date Modified", help_text="Date Modified"

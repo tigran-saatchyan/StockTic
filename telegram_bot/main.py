@@ -8,9 +8,12 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from bot_config import BotConfig
 from bot_instance import bot
 from handlers import (
-    registration_router, ticker_router, notification_router, common_router,
+    registration_router,
+    ticker_router,
+    notification_router,
+    common_router,
 )
-from services import start_bot
+from telegram_bot.services import start_bot
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,11 +35,11 @@ async def main() -> None:
     """
     config = BotConfig(
         admin_ids=[463092387],
-        welcome_message='Welcome to the bot! 🤖',
+        welcome_message="Welcome to the bot! 🤖",
     )
 
     dp = Dispatcher(storage=MemoryStorage())
-    dp['config'] = config
+    dp["config"] = config
 
     register_routers(dp)
 
@@ -46,5 +49,5 @@ async def main() -> None:
         logging.error(f"An error occurred: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

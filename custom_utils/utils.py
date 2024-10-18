@@ -10,14 +10,13 @@ def save_picture(instance, filename):
 
     picture_name = "".join(
         [
-            "".join(filename.split('.')[:-1]),
+            "".join(filename.split(".")[:-1]),
             formatted_date,
             ".",
-            filename.split('.')[-1]
+            filename.split(".")[-1],
         ]
     )
-    return (f"{app_name}/{model_name}/{instance.pk}/{instance.pk}_"
-            f"{picture_name}")
+    return f"{app_name}/{model_name}/{instance.pk}/{instance.pk}_" f"{picture_name}"
 
 
 def format_market_cap(value):
@@ -29,12 +28,12 @@ def format_market_cap(value):
     value = float(value) if value else 0
 
     if value >= trillion:
-        return f'{value / trillion:.2f}T'
+        return f"{value / trillion:.2f}T"
     elif value >= billion:
-        return f'{value / billion:.2f}B'
+        return f"{value / billion:.2f}B"
     elif value >= million:
-        return f'{value / million:.2f}M'
+        return f"{value / million:.2f}M"
     elif value >= thousand:
-        return f'{value / thousand:.2f}K'
+        return f"{value / thousand:.2f}K"
     else:
         return str(value)

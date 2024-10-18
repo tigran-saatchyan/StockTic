@@ -3,14 +3,13 @@ from io import TextIOWrapper
 
 from django.db import models
 
-from services.common.constants import NULLABLE
-from services.common.mixins import DateFieldsMixin
+from custom_utils.common.constants import NULLABLE
+from custom_utils.common.mixins import DateFieldsMixin
 
 
 class Ticker(DateFieldsMixin, models.Model):
     symbol = models.CharField(
-        max_length=10, unique=True, verbose_name="Symbol",
-        help_text="Stock symbol"
+        max_length=10, unique=True, verbose_name="Symbol", help_text="Stock symbol"
     )
     name = models.CharField(
         max_length=255, **NULLABLE, verbose_name="Name", help_text="Stock name"
@@ -25,28 +24,28 @@ class Ticker(DateFieldsMixin, models.Model):
         max_length=255, **NULLABLE, verbose_name="Sector", help_text="Sector"
     )
     industry = models.CharField(
-        max_length=255, **NULLABLE, verbose_name="Industry",
-        help_text="Industry"
+        max_length=255, **NULLABLE, verbose_name="Industry", help_text="Industry"
     )
     last_sale = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Last Sale",
-        help_text="Last sale price"
+        max_length=50, **NULLABLE, verbose_name="Last Sale", help_text="Last sale price"
     )
     net_change = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Net Change",
-        help_text="Net change"
+        max_length=50, **NULLABLE, verbose_name="Net Change", help_text="Net change"
     )
     percent_change = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Percent Change",
-        help_text="Percent change"
+        max_length=50,
+        **NULLABLE,
+        verbose_name="Percent Change",
+        help_text="Percent change",
     )
     market_cap = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Market Cap",
-        help_text="Market capitalization"
+        max_length=50,
+        **NULLABLE,
+        verbose_name="Market Cap",
+        help_text="Market capitalization",
     )
     volume = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Volume",
-        help_text="Volume"
+        max_length=50, **NULLABLE, verbose_name="Volume", help_text="Volume"
     )
 
     @classmethod
