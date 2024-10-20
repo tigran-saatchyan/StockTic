@@ -1,0 +1,40 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}
+  {% if form.instance.pk %}
+    Edit Notification
+  {% else %}
+    Add Notification
+  {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+{% block content %}
+  <div class="card">
+
+    <div class="card-body">
+      <h1 class="mb-4">
+        {% if form.instance.pk %}
+          Edit Notification
+        {% else %}
+          Add Notification
+        {% endif %}
+      </h1>
+      <form method="post" class="card-text">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+          {% if form.instance.pk %}
+            Update
+          {% else %}
+            Create
+          {% endif %}
+        </button>
+        <a href="{% url 'notifications:notification_list' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

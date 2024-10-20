@@ -1,0 +1,21 @@
+<!-- templates/tickers/ticker_detail.html -->
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    {{ ticker.name }} ({{ ticker.symbol }})
+{% endblock %}
+
+{% block content %}
+<h1>{{ ticker.name }} ({{ ticker.symbol }})</h1>
+<div class="container mt-4">
+    <h2>Company Profile</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ ticker.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ ticker.industry }} | {{ ticker.sector }}</h6>
+            <p class="card-text lead">{{ ticker.description }}</p>
+        </div>
+    </div>
+    <!-- Add more detailed information as necessary -->
+</div>
+{% endblock %}
