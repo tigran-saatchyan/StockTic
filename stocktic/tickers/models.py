@@ -1,13 +1,35 @@
+"""This module defines the Ticker model and its associated methods.
+
+Classes:
+    Ticker: A Django model representing a stock ticker.
+"""
+
 import csv
 from io import TextIOWrapper
 
-from django.db import models
-
 from custom_utils.common.constants import NULLABLE
 from custom_utils.common.mixins import DateFieldsMixin
+from django.db import models
 
 
 class Ticker(DateFieldsMixin, models.Model):
+    """A Django model representing a stock ticker.
+
+    Attributes:
+        symbol (CharField): The stock symbol.
+        name (CharField): The stock name.
+        country (CharField): The country of the stock.
+        ipo_year (IntegerField): The IPO year of the stock.
+        stock_exchange (CharField): The stock exchange.
+        sector (CharField): The sector of the stock.
+        industry (CharField): The industry of the stock.
+        last_sale (CharField): The last sale price.
+        net_change (CharField): The net change in price.
+        percent_change (CharField): The percent change in price.
+        market_cap (CharField): The market capitalization.
+        volume (CharField): The trading volume.
+    """
+
     symbol = models.CharField(
         max_length=255,
         unique=True,
@@ -39,13 +61,22 @@ class Ticker(DateFieldsMixin, models.Model):
         db_index=True,
     )
     industry = models.CharField(
-        max_length=255, **NULLABLE, verbose_name="Industry", help_text="Industry"
+        max_length=255,
+        **NULLABLE,
+        verbose_name="Industry",
+        help_text="Industry",
     )
     last_sale = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Last Sale", help_text="Last sale price"
+        max_length=50,
+        **NULLABLE,
+        verbose_name="Last Sale",
+        help_text="Last sale price",
     )
     net_change = models.CharField(
-        max_length=50, **NULLABLE, verbose_name="Net Change", help_text="Net change"
+        max_length=50,
+        **NULLABLE,
+        verbose_name="Net Change",
+        help_text="Net change",
     )
     percent_change = models.CharField(
         max_length=50,
@@ -65,6 +96,11 @@ class Ticker(DateFieldsMixin, models.Model):
 
     @classmethod
     def create_from_csv(cls, csv_file):
+        """Create Ticker instances from a CSV file.
+
+        Args:
+            csv_file (File): The CSV file containing ticker data.
+        """
         file = TextIOWrapper(csv_file.file, encoding="utf-8")
         reader = csv.reader(file)
         next(reader)
@@ -105,9 +141,14 @@ class Ticker(DateFieldsMixin, models.Model):
 
     @classmethod
     def create_or_update_from_api(cls, data):
-        """
-        Create or update Ticker from API data.
-        :param data: dict containing 'symbol', 'name', 'stock_exchange', and 'last_sale'
+        """Create or update Ticker from API data.
+
+        Args:
+            data (dict): A dictionary containing 'symbol', 'name',
+                'stock_exchange', and 'last_sale'.
+
+        Returns:
+            Ticker: The created or updated Ticker instance.
         """
         symbol = data.get("symbol")
         name = data.get("name")
@@ -125,4 +166,9 @@ class Ticker(DateFieldsMixin, models.Model):
         return ticker
 
     def __str__(self):
+        """Return the string representation of the Ticker instance.
+
+        Returns:
+            str: The stock symbol.
+        """
         return self.symbol

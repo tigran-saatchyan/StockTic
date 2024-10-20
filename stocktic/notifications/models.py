@@ -1,9 +1,30 @@
-from django.db import models
+"""This module defines the models for the notifications app.
+
+Models:
+    Notification: A model representing a notification instance.
+"""
 
 from custom_utils.common.constants import NULLABLE
+from django.db import models
 
 
 class Notification(models.Model):
+    """A model representing a notification instance.
+
+    Attributes:
+        user (ForeignKey): The user associated with the notification.
+        last_notification (DateTimeField): The date and time of the
+            last notification.
+        ticker (ForeignKey): The ticker associated with the notification.
+        notification_value (DecimalField): The value for the notification.
+        notification_type (CharField): The type of notification
+            (email, telegram, all).
+        notification_criteria (CharField): The criteria for the notification
+            (more_than, less_than).
+        date_created (DateTimeField): The date and time when the
+            notification was created.
+    """
+
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="notifications"
     )
@@ -48,4 +69,5 @@ class Notification(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """Returns a string representation of the Notification instance."""
         return self.ticker

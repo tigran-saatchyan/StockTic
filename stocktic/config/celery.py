@@ -1,3 +1,9 @@
+"""This module configures Celery for the Django project, setting up the Celery
+application and loading tasks from installed apps.
+
+The configuration uses the Django settings module and the Celery library.
+"""
+
 from __future__ import absolute_import, unicode_literals
 
 import os

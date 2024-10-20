@@ -1,3 +1,10 @@
+"""This module provides services for fetching financial data using the
+yfinance library.
+
+Classes:
+    Finance: A class to interact with financial data for a given ticker symbol.
+"""
+
 import logging
 
 import yfinance as yf
@@ -8,6 +15,13 @@ logger = logging.getLogger(__name__)
 
 
 class Finance:
+    """A class to interact with financial data for a given ticker symbol.
+
+    Attributes:
+        symbol (str): The ticker symbol of the company.
+        ticker (Ticker): The yfinance Ticker object.
+    """
+
     def __init__(self, symbol):
         """Initializes the Finance class with a ticker symbol.
 
@@ -34,12 +48,12 @@ class Finance:
 
         Args:
             period (str): The period for which to fetch the data
-            (e.g., "1mo", "1y").
-            interval (str): The interval for the data
-            (e.g., "1d", "1wk").
+                (e.g., "1mo", "1y").
+            interval (str): The interval for the data (e.g., "1d", "1wk").
+
         Returns:
             pandas.DataFrame: A DataFrame containing the historical
-            market data.
+                market data.
         """
         try:
             return self.ticker.history(
@@ -72,7 +86,9 @@ class Finance:
             self.get_history()
             return self.ticker.history_metadata
         except Exception as e:
-            logger.error(f"Error fetching history metadata for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching history metadata for {self.symbol}: {e}"
+            )
             return None
 
     def get_actions(self):
@@ -80,7 +96,7 @@ class Finance:
         of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the actions data.
+            pandas.DataFrame: A DataFrame containing the action's data.
         """
         try:
             return self.ticker.actions
@@ -122,7 +138,9 @@ class Finance:
         try:
             return self.ticker.capital_gains
         except Exception as e:
-            logger.error(f"Error fetching capital gains for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching capital gains for {self.symbol}: {e}"
+            )
             return None
 
     def get_shares_full(self, start="2024-02-08", end=None):
@@ -130,12 +148,11 @@ class Finance:
 
         Args:
             start (str): The start date for fetching the share data.
-            end (str, optional): The end date for fetching the share
-            data. Defaults to None.
+            end (str, optional): The end date for fetching the share data.
+                Defaults to None.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the share
-            count data.
+            pandas.DataFrame: A DataFrame containing the share count data.
         """
         try:
             return self.ticker.get_shares_full(start=start, end=end)
@@ -148,26 +165,29 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the annual income
-            statement data.
+                statement data.
         """
         try:
             return self.ticker.income_stmt
         except Exception as e:
-            logger.error(f"Error fetching income statement for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching income statement for {self.symbol}: {e}"
+            )
             return None
 
     def get_quarterly_income_stmt(self):
         """Fetches the quarterly income statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the quarterly
-            income statement data.
+            pandas.DataFrame: A DataFrame containing the quarterly income
+                statement data.
         """
         try:
             return self.ticker.quarterly_income_stmt
         except Exception as e:
             logger.error(
-                f"Error fetching quarterly income statement for {self.symbol}: {e}"
+                f"Error fetching quarterly income statement for "
+                f"{self.symbol}: {e}"
             )
             return None
 
@@ -176,26 +196,29 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the annual balance
-            sheet data.
+                sheet data.
         """
         try:
             return self.ticker.balance_sheet
         except Exception as e:
-            logger.error(f"Error fetching balance sheet for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching balance sheet for {self.symbol}: {e}"
+            )
             return None
 
     def get_quarterly_balance_sheet(self):
         """Fetches the quarterly balance sheet of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the quarterly
-            balance sheet data.
+            pandas.DataFrame: A DataFrame containing the quarterly balance
+                sheet data.
         """
         try:
             return self.ticker.quarterly_balance_sheet
         except Exception as e:
             logger.error(
-                f"Error fetching quarterly balance sheet for {self.symbol}: {e}"
+                f"Error fetching quarterly balance sheet for "
+                f"{self.symbol}: {e}"
             )
             return None
 
@@ -203,8 +226,7 @@ class Finance:
         """Fetches the annual cash flow statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the annual cash
-            flow data.
+            pandas.DataFrame: A DataFrame containing the annual cash flow data.
         """
         try:
             return self.ticker.cashflow
@@ -216,26 +238,29 @@ class Finance:
         """Fetches the quarterly cash flow statement of the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the quarterly
-            cash flow data.
+            pandas.DataFrame: A DataFrame containing the quarterly cash
+                flow data.
         """
         try:
             return self.ticker.quarterly_cashflow
         except Exception as e:
-            logger.error(f"Error fetching quarterly cashflow for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching quarterly cashflow for {self.symbol}: {e}"
+            )
             return None
 
     def get_major_holders(self):
         """Fetches the major holders of the company's stock.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the major
-            holders data.
+            pandas.DataFrame: A DataFrame containing the major holder's data.
         """
         try:
             return self.ticker.major_holders
         except Exception as e:
-            logger.error(f"Error fetching major holders for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching major holders for {self.symbol}: {e}"
+            )
             return None
 
     def get_institutional_holders(self):
@@ -243,12 +268,14 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the institutional
-            holders data.
+                holder's data.
         """
         try:
             return self.ticker.institutional_holders
         except Exception as e:
-            logger.error(f"Error fetching institutional holders for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching institutional holders for {self.symbol}: {e}"
+            )
             return None
 
     def get_mutualfund_holders(self):
@@ -256,12 +283,14 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the mutual fund
-            holders data.
+                holders data.
         """
         try:
             return self.ticker.mutualfund_holders
         except Exception as e:
-            logger.error(f"Error fetching mutual fund holders for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching mutual fund holders for {self.symbol}: {e}"
+            )
             return None
 
     def get_insider_transactions(self):
@@ -269,12 +298,14 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the insider
-            transactions data.
+                transaction's data.
         """
         try:
             return self.ticker.insider_transactions
         except Exception as e:
-            logger.error(f"Error fetching insider transactions for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching insider transactions for {self.symbol}: {e}"
+            )
             return None
 
     def get_insider_purchases(self):
@@ -282,12 +313,14 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the insider
-            purchases data.
+                purchases data.
         """
         try:
             return self.ticker.insider_purchases
         except Exception as e:
-            logger.error(f"Error fetching insider purchases for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching insider purchases for {self.symbol}: {e}"
+            )
             return None
 
     def get_insider_roster_holders(self):
@@ -295,7 +328,7 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the insider roster
-            holders data.
+                holders data.
         """
         try:
             return self.ticker.insider_roster_holders
@@ -310,12 +343,14 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the analyst
-            recommendations.
+                recommendations.
         """
         try:
             return self.ticker.recommendations
         except Exception as e:
-            logger.error(f"Error fetching recommendations for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching recommendations for {self.symbol}: {e}"
+            )
             return None
 
     def get_recommendations_summary(self):
@@ -324,13 +359,14 @@ class Finance:
 
         Returns:
             pandas.DataFrame: A DataFrame containing the
-            recommendations summary.
+                recommendations summary.
         """
         try:
             return self.ticker.recommendations_summary
         except Exception as e:
             logger.error(
-                f"Error fetching recommendations summary for {self.symbol}: {e}"
+                f"Error fetching recommendations summary for "
+                f"{self.symbol}: {e}"
             )
             return None
 
@@ -338,13 +374,15 @@ class Finance:
         """Fetches the stock upgrades and downgrades for the company.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the upgrades and
-            downgrades.
+            pandas.DataFrame: A DataFrame containing the upgrades
+                and downgrades.
         """
         try:
             return self.ticker.upgrades_downgrades
         except Exception as e:
-            logger.error(f"Error fetching upgrades/downgrades for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching upgrades/downgrades for {self.symbol}: {e}"
+            )
             return None
 
     def get_earnings_dates(self):
@@ -356,12 +394,14 @@ class Finance:
         try:
             return self.ticker.earnings_dates
         except Exception as e:
-            logger.error(f"Error fetching earnings dates for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching earnings dates for {self.symbol}: {e}"
+            )
             return None
 
     def get_isin(self):
-        """Fetches the International Securities Identification Number
-        (ISIN) for the company.
+        """Fetches the International Securities Identification Number (ISIN)
+            for the company.
 
         Returns:
             str: The ISIN code.
@@ -420,7 +460,9 @@ class Finance:
         try:
             return self.ticker.sustainability
         except Exception as e:
-            logger.error(f"Error fetching sustainability for {self.symbol}: {e}")
+            logger.error(
+                f"Error fetching sustainability for {self.symbol}: {e}"
+            )
             return None
 
     def get_latest_price(self):
@@ -435,7 +477,6 @@ class Finance:
             logger.error(f"Error fetching latest price for {self.symbol}: {e}")
             return None
 
-    # Additional methods for analysis and aggregation
     def get_pe_ratio(self):
         """Fetches the Price-to-Earnings (P/E) ratio of the company.
 
