@@ -15,9 +15,6 @@ schema_view = get_schema_view(
         title="StockTic API",
         default_version="v1",
         description="API for StockTic",
-        # terms_of_service="https://github.com/tigran-saatchyan"
-        #                  "/StockTic/blob/"
-        #                  "develop/TERMS_OF_SERVICE",
         contact=openapi.Contact(
             email="mr.saatchyan@gmail.com",
             name="Tigran Saatchyan",
@@ -25,8 +22,8 @@ schema_view = get_schema_view(
         ),
         license=openapi.License(
             name="MIT License",
-            # url="https://github.com/tigran-saatchyan/"
-            #     "StockTic/blob/develop/LICENSE"
+            url="https://github.com/tigran-saatchyan/"
+            "StockTic/blob/develop/LICENSE",
         ),
     ),
     public=True,
