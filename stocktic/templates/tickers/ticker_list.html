@@ -1,0 +1,121 @@
+<!-- templates/tickers/ticker_list.html -->
+{% extends 'layout/base.html' %}
+{% load url_filters %}
+{% load market_filters %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="col-md-12 mb-5">
+      <div class="row justify-content-between align-items-center">
+        <div class="mb-3 col-7">
+          <h1>NASDAQ Symbols</h1>
+        </div>
+        <div class="mb-3 col-3">
+          <button onclick="fetchTickers()">Fetch Tickers</button>
+          <form method="post" enctype="multipart/form-data" action="{% url 'tickers:import_tickers' %}">
+            {% csrf_token %}
+            <label for="formFileSm" class="form-label">Upload NASDAQ Symbols (CSV)</label>
+            <input class="form-control form-control-sm" id="formFileSm" name="csv_file" type="file" accept=".csv">
+            <button class="btn btn-success mt-3" type="submit">Upload</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <table id="symbolData" class="table table-striped">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Country</th>
+        <th>IPO Year</th>
+        <th>Sector</th>
+        <th>Industry</th>
+{#        <th>Last Sale</th>#}
+{#        <th>Net Change</th>#}
+{#        <th>Percent Change</th>#}
+        <th>Market Cap</th>
+{#        <th>Volume</th>#}
+      </tr>
+      </thead>
+      <tbody>
+      {% for ticker in tickers %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><a href="{% url 'tickers:ticker_detail' ticker.symbol|replace_with_hyphen %}">{{ ticker.symbol }}</a></td>
+          <td title="{{ ticker.name }}">{{ ticker.name|truncatewords:5 }}</td>
+          <td>{{ ticker.country }}</td>
+          <td>{{ ticker.ipo_year }}</td>
+          <td>{{ ticker.sector }}</td>
+          <td>{{ ticker.industry }}</td>
+{#          <td>{{ ticker.last_sale }}</td>#}
+{#          <td>{{ ticker.net_change }}</td>#}
+{#          <td>{{ ticker.percent_change }}</td>#}
+          <td>{{ ticker.market_cap|format_market_cap }}</td>
+{#          <td>{{ ticker.volume|format_market_cap }}</td>#}
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+      <tr>
+        <td>#</td>
+        <td>Symbol</td>
+        <td>Name</td>
+        <td>Country</td>
+        <td>IPO Year</td>
+        <td>Sector</td>
+        <td>Industry</td>
+{#        <td>Last Sale</td>#}
+{#        <td>Net Change</td>#}
+{#        <td>Percent Change</td>#}
+        <td>Market Cap</td>
+{#        <td>Volume</td>#}
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+      Object.assign(DataTable.defaults, {
+          ordering: true,
+          searching: true,
+          lengthChange: true,
+          pageLength: 25,
+          language: {
+              search: "_INPUT_",
+              searchPlaceholder: "Search..."
+          },
+          dom: 'Bfrtip',
+          buttons: [
+              'copy', 'csv', 'excel', 'pdf', 'print'
+          ],
+      });
+      new DataTable('#symbolData', {
+          initComplete: function () {
+              this.api()
+                  .columns(":gt(0)")
+                  .every(function () {
+                      let column = this;
+                      let title = column.footer().textContent;
+
+                      // Create input element and add event listener
+                      $('<input type="text" class="form-control" placeholder="' + title + '" />')
+                          .appendTo($(column.footer()).empty())
+                          .on('keyup change clear', function () {
+                              if (column.search() !== this.value) {
+                                  column.search(this.value).draw();
+                              }
+                          });
+                  });
+          },
+      });
+
+  </script>
+{% endblock %}

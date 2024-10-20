@@ -1,0 +1,24 @@
+<!-- templates/includes/sidebar.html -->
+{% load custom_tags %}
+
+<div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+{#            <li class="nav-item">#}
+{#                <a class="nav-link {% active_url request '/dashboard/' %}" href="{% url 'dashboard' %}">#}
+{#                    Dashboard#}
+{#                </a>#}
+{#            </li>#}
+            <li class="nav-item">
+                <a class="nav-link {% active_url request '/stocks/' %}" href="{% url 'stock_list' %}">
+                    Stocks
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% active_url request '/tickers/' %}" href="{% url 'tickers:ticker_list' %}">
+                    Tickers
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

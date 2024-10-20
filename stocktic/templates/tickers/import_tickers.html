@@ -1,0 +1,18 @@
+<!-- templates/tickers/import_tickers.html -->
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    Import Tickers
+{% endblock %}
+
+{% block content %}
+<h1>Import Tickers</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="file" class="form-label">CSV File</label>
+        <input type="file" class="form-control" id="file" name="csv_file">
+    </div>
+    <button type="submit" class="btn btn-primary">Import</button>
+</form>
+{% endblock %}
