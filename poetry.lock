@@ -2382,7 +2382,10 @@ requests = ">=2.31"
 nospam = ["requests-cache (>=1.0)", "requests-ratelimiter (>=0.3.1)"]
 repair = ["scipy (>=1.6.3)"]
 
+[extras]
+caching = ["redis"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "89f46ec5b66c80ef60ef0816b1dcaedd90f48f91a090109cb58e68334b76c5e5"
+content-hash = "4146554d002890897c377bb7ac4efeb4184c2e822923e6f0f64f0b02979d1da5"

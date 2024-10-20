@@ -15,7 +15,7 @@
           <h1>NASDAQ Symbols</h1>
         </div>
         <div class="mb-3 col-3">
-          <button onclick="fetchTickers()">Fetch Tickers</button>
+{#          <button onclick="fetchTickers()">Fetch Tickers</button>#}
           <form method="post" enctype="multipart/form-data" action="{% url 'tickers:import_tickers' %}">
             {% csrf_token %}
             <label for="formFileSm" class="form-label">Upload NASDAQ Symbols (CSV)</label>

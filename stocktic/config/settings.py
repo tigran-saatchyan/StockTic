@@ -55,6 +55,8 @@ LOCAL_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "drf_yasg",
+    "django_filters",
     "rest_framework_simplejwt",
     "django_celery_beat",
 ]
@@ -226,3 +228,5 @@ if not TESTING:
         "debug_toolbar.middleware.DebugToolbarMiddleware",
         *MIDDLEWARE,
     ]
+
+SWAGGER_SETTINGS = {}

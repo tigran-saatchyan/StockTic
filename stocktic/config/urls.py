@@ -27,13 +27,16 @@ api_token_urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
 third_party_urlpatterns = []
-
+docs_urlpatterns = [
+    path("", include("docs")),
+]
 urlpatterns = [
     *django_urlpatterns,
     *app_urlpatterns,
     *api_urlpatterns,
     *api_token_urlpatterns,
     *third_party_urlpatterns,
+    *docs_urlpatterns,
 ]
 
 if settings.DEBUG or not settings.TESTING:

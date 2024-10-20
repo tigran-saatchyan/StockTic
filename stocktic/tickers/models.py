@@ -9,7 +9,11 @@ from custom_utils.common.mixins import DateFieldsMixin
 
 class Ticker(DateFieldsMixin, models.Model):
     symbol = models.CharField(
-        max_length=255, unique=True, verbose_name="Symbol", help_text="Stock symbol"
+        max_length=255,
+        unique=True,
+        verbose_name="Symbol",
+        help_text="Stock symbol",
+        db_index=True,
     )
     name = models.CharField(
         max_length=255, **NULLABLE, verbose_name="Name", help_text="Stock name"
@@ -25,9 +29,14 @@ class Ticker(DateFieldsMixin, models.Model):
         **NULLABLE,
         verbose_name="Stock Exchange",
         help_text="Stock exchange",
+        db_index=True,
     )
     sector = models.CharField(
-        max_length=255, **NULLABLE, verbose_name="Sector", help_text="Sector"
+        max_length=255,
+        **NULLABLE,
+        verbose_name="Sector",
+        help_text="Sector",
+        db_index=True,
     )
     industry = models.CharField(
         max_length=255, **NULLABLE, verbose_name="Industry", help_text="Industry"
