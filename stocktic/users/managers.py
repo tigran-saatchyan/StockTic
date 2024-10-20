@@ -1,9 +1,14 @@
+"""This module defines the custom user manager for the Users app.
+
+Classes:
+    CustomUserManager: A custom user manager for the custom user model.
+"""
+
 from django.contrib.auth.models import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    """
-    Custom user manager for the custom user model.
+    """Custom user manager for the custom user model.
 
     This manager provides methods for creating both regular users and
     superusers.
@@ -29,8 +34,7 @@ class CustomUserManager(BaseUserManager):
     """
 
     def create_user(self, email, password=None, **extra_fields):
-        """
-        Create and save a regular user.
+        """Create and save a regular user.
 
         Args:
             email (str): The user's email address.
@@ -56,8 +60,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """
-        Create and save a superuser.
+        """Create and save a superuser.
 
         Args:
             email (str): The superusers email address.

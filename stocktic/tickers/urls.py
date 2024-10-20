@@ -1,4 +1,9 @@
-# tickers/urls.py
+"""This module defines the URL patterns for the Tickers app.
+
+Functions:
+    urlpatterns: A list of URL patterns for the Tickers app.
+"""
+
 from django.urls import path
 
 from . import views
@@ -12,7 +17,9 @@ urlpatterns = [
     path("export/", views.export_tickers, name="export_tickers"),
     path("import/", views.import_tickers, name="import_tickers"),
     path("<str:symbol>/", views.get_stock_info, name="ticker_detail"),
-    path("<str:symbol>/history/", views.get_stock_history, name="ticker_history"),
+    path(
+        "<str:symbol>/history/", views.get_stock_history, name="ticker_history"
+    ),
     path(
         "fetch-tickers-async/",
         FetchTickersAsyncView.as_view(),
