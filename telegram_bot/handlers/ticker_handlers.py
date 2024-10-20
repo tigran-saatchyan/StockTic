@@ -1,39 +1,57 @@
+"""This module contains handlers for ticker-related commands and messages
+for the Telegram bot. It includes functions for retrieving ticker information,
+latest price, and news related to a ticker symbol.
+
+The handlers use the aiogram library for Telegram bot interactions and
+custom utilities for formatting and financial data retrieval.
+"""
+
 import re
 from datetime import datetime
 
 import pytz
-from aiogram import types, Router
+from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from telegram_bot.settings import BotSettings as settings
-
 from custom_utils.utils import format_market_cap
-from telegram_bot.states import TickerStates
 from tickers.services import Finance
+
+from telegram_bot.settings import BotSettings as settings
+from telegram_bot.states import TickerStates
 
 ticker_router = Router()
 
 
 @ticker_router.message(Command("ticker_info"))
 async def cmd_ticker_info(message: types.Message, state: FSMContext) -> None:
-    """
-    This handler will be called when user sends `/ticker_info` command
+    """This handler will be called when user sends `/ticker_info` command.
+
+    Args:
+        message (types.Message): The message object from the user.
+        state (FSMContext): The finite state machine context.
     """
     await state.set_state(TickerStates.waiting_for_ticker_info)
     await message.answer("Please provide a ticker symbol:")
 
 
 @ticker_router.message(TickerStates.waiting_for_ticker_info)
-async def process_ticker_info(message: types.Message, state: FSMContext) -> None:
-    """
-    This handler will process the ticker symbol provided by the user
+async def process_ticker_info(
+    message: types.Message, state: FSMContext
+) -> None:
+    """This handler will process the ticker symbol provided by the user.
+
+    Args:
+        message (types.Message): The message object from the user.
+        state (FSMContext): The finite state machine context.
     """
     ticker = message.text.upper()
     finance = Finance(ticker)
     info = finance.get_info()
     if info:
         try:
-            info["marketCap"] = format_market_cap(int(info.get("marketCap", "N/A")))
+            info["marketCap"] = format_market_cap(
+                int(info.get("marketCap", "N/A"))
+            )
         except ValueError:
             info["marketCap"] = "N/A"
         response = (
@@ -57,17 +75,25 @@ async def process_ticker_info(message: types.Message, state: FSMContext) -> None
 
 @ticker_router.message(Command("latest_price"))
 async def cmd_latest_price(message: types.Message, state: FSMContext) -> None:
-    """
-    Request the latest price for a ticker symbol
+    """Request the latest price for a ticker symbol.
+
+    Args:
+        message (types.Message): The message object from the user.
+        state (FSMContext): The finite state machine context.
     """
     await state.set_state(TickerStates.waiting_for_latest_price)
     await message.answer("Please provide a ticker symbol:")
 
 
 @ticker_router.message(TickerStates.waiting_for_latest_price)
-async def process_latest_price(message: types.Message, state: FSMContext) -> None:
-    """
-    This handler will process the ticker symbol provided by the user
+async def process_latest_price(
+    message: types.Message, state: FSMContext
+) -> None:
+    """This handler will process the ticker symbol provided by the user.
+
+    Args:
+        message (types.Message): The message object from the user.
+        state (FSMContext): The finite state machine context.
     """
     ticker = message.text.upper()
     finance = Finance(ticker)
@@ -82,20 +108,29 @@ async def process_latest_price(message: types.Message, state: FSMContext) -> Non
 
 
 @ticker_router.message(Command("news"))
-async def request_ticker_for_news(message: types.Message, state: FSMContext) -> None:
-    """
-    Requests the ticker symbol from the user to fetch news.
+async def request_ticker_for_news(
+    message: types.Message, state: FSMContext
+) -> None:
+    """Requests the ticker symbol from the user to fetch news.
+
+    Args:
+        message (types.Message): The message object from the user.
+        state (FSMContext): The finite state machine context.
     """
     await message.answer(
-        "Please provide the ticker symbol for which you want to get the latest news:"
+        "Please provide the ticker symbol for which you want "
+        "to get the latest news:"
     )
     await state.set_state(TickerStates.waiting_for_ticker_news)
 
 
 @ticker_router.message(TickerStates.waiting_for_ticker_news)
 async def fetch_news(message: types.Message, state: FSMContext) -> None:
-    """
-    Fetches the latest news for the provided ticker symbol.
+    """Fetches the latest news for the provided ticker symbol.
+
+    Args:
+        message (types.Message): The message object from the user.
+        state (FSMContext): The finite state machine context.
     """
     symbol = message.text.strip().upper()
     finance = Finance(symbol)
@@ -112,9 +147,9 @@ async def fetch_news(message: types.Message, state: FSMContext) -> None:
             )
             timestamp = article["providerPublishTime"]
             dt = datetime.fromtimestamp(timestamp, pytz.utc)
-            formatted_time = dt.astimezone(pytz.timezone(settings.TIME_ZONE)).strftime(
-                "%d-%b-%Y %H:%M (%Z)"
-            )
+            formatted_time = dt.astimezone(
+                pytz.timezone(settings.TIME_ZONE)
+            ).strftime("%d-%b-%Y %H:%M (%Z)")
             response = (
                 f"Title: {article['title']}\n"
                 f"Published: {formatted_time}\n"

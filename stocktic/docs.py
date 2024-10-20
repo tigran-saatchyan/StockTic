@@ -1,3 +1,10 @@
+"""This module configures the API documentation views for the StockTic project
+using drf_yasg and Django REST framework.
+
+It sets up the schema view for Swagger and ReDoc UI, and defines
+the URL patterns for accessing these documentation interfaces.
+"""
+
 from django.urls import path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -28,8 +35,18 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path(
-        "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
+        "swagger<format>/",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
     ),
-    path("", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path(
+        "redoc/",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),
 ]

@@ -37,3 +37,60 @@ caching = ["redis"]
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+
+[tool.ruff]
+select = ["D", "E", "PIE", "T20", "PYI", "Q", "RET", "SIM", "PTH"]
+respect-gitignore = false
+show-fixes = true
+target-version = "py312"
+exclude = [".venv", "migrations"]
+preview = true
+line-length = 79
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 79
+max-doc-length = 72
+
+[tool.ruff.lint]
+select = [
+    "D", # pydocstyle (D)
+    "E", # pycodestyle (E, W)
+    "PIE", # flake8-pie (PIE)
+    "T20", # flake8-print (T20)
+    "PYI", # flake8-pyi (PYI)
+    "Q", # flake8-quotes (Q)
+    "RET", # flake8-return (RET)
+    "SIM", # flake8-simplify (SIM)
+    "PTH", # flake8-use-pathlib (PTH)
+    "TD", # flake8-todos (TD)
+    "FIX", # flake8-fixmes (FIX)
+    "FURB", # refurb (FURB)
+    "RUF", # Ruff-specific rules (RUF)
+    "C90", # mccabe (C90) (complex-structure)
+    "I", # isort (I)
+]
+ignore = [
+    "D417", # Missing argument descriptions in the docstring
+    "D415", # First line should end with a period
+    "D205", # 1 blank line required between summary line and description
+    "D104", # Missing docstring
+    "D101", # Missing docstring
+    "D102", # Missing docstring
+    "D106", # Missing docstring
+    "D107", # Missing docstring
+    "TD003", # Missing issue link on the line following this TODOs
+    "FIX002", # todos found
+    "FIX003", # XXX found
+    "FIX004", # HACK found
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.black]
+line-length = 79
+target-version = ["py312"]
+include = "\\.pyi?$"
+exclude = "/(\\.venv|build|dist|migrations)/"
