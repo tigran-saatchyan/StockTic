@@ -6,6 +6,7 @@ various applications and API endpoints.
 """
 
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework_simplejwt.views import (
@@ -41,6 +42,7 @@ third_party_urlpatterns = []
 docs_urlpatterns = [
     path("", include("docs")),
 ]
+
 urlpatterns = [
     *django_urlpatterns,
     *app_urlpatterns,
@@ -54,3 +56,8 @@ if settings.DEBUG or not settings.TESTING:
     from debug_toolbar.toolbar import debug_toolbar_urls
 
     urlpatterns += debug_toolbar_urls()
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT
+    )
